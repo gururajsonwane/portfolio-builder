@@ -209,8 +209,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
 
                 $pdo->commit();
-
-                header("Location: ../view.php?slug=" . urlencode($portfolio['slug']));
+                header("Location: /portfolio-builder/" . urlencode($portfolio['slug']));
                 exit;
 
             } catch (Exception $e) {

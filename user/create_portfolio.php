@@ -179,7 +179,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 unset($_SESSION['csrf_token']);
                 $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 
-                header("Location: ../view.php?slug=" . urlencode($slug));
+                header("Location: /portfolio-builder/" . urlencode($slug));
                 exit;
 
             } catch (Exception $e) {

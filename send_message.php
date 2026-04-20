@@ -34,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         // redirect back
-        header("Location: view.php?slug=" . urlencode($slug) . "&success=1");
+        header("Location: /portfolio-builder/" . urlencode($slug) . "?success=1");
         exit;
 
     } catch (Exception $e) {

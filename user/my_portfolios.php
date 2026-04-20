@@ -212,7 +212,7 @@ $portfolios = $stmt->fetchAll();
                         </div>
 
                         <div class="actions">
-                            <a class="view-btn" href="../view.php?slug=<?= urlencode($portfolio['slug']) ?>" target="_blank">View</a>
+                            <a class="view-btn" href="/portfolio-builder/<?= urlencode($portfolio['slug']) ?>" target="_blank">View</a>
                             <a class="edit-btn" href="edit_portfolio.php?id=<?= (int)$portfolio['id'] ?>">Edit</a>
                             <a class="delete-btn" href="delete_portfolio.php?id=<?= (int)$portfolio['id'] ?>" onclick="return confirm('Are you sure you want to delete this portfolio?')">Delete</a>
                         </div>

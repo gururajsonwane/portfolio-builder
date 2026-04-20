@@ -226,14 +226,15 @@ $portfolios = $stmt->fetchAll();
                         <td class="muted"><?= htmlspecialchars(date('d M Y', strtotime($portfolio['created_at']))) ?></td>
 
                         <td>
+                           
                             <a 
-                                class="view-btn" 
-                                href="../view.php?slug=<?= urlencode($portfolio['slug']) ?>" 
+                                class="view-btn"
+                                href="/portfolio-builder/<?= urlencode($portfolio['slug']) ?>" 
                                 target="_blank"
                             >
                                 View
                             </a>
-
+                            
                             <a 
                                 class="delete-btn" 
                                 href="portfolios.php?delete=<?= (int)$portfolio['id'] ?>"
