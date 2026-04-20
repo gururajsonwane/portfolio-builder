@@ -1,0 +1,71 @@
+/* RESET */
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins', sans-serif;
+}
+
+/* BACKGROUND */
+body{
+    background: linear-gradient(135deg, #4b2e83, #1f1c2c);
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+/* CARD */
+.container{
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(20px);
+    padding: 40px 30px;
+    border-radius: 20px;
+    width: 350px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+}
+
+/* HEADING */
+.container h2{
+    text-align:center;
+    color:#fff;
+    margin-bottom:20px;
+}
+
+/* INPUT */
+.container input{
+    width:100%;
+    padding:12px;
+    margin:10px 0;
+    border:none;
+    border-radius:10px;
+    outline:none;
+}
+
+/* BUTTON */
+.container input[type="submit"]{
+    background:#7f5af0;
+    color:#fff;
+    cursor:pointer;
+}
+
+/* ERROR */
+.error{
+    background:red;
+    color:#fff;
+    padding:10px;
+    margin-bottom:10px;
+    border-radius:8px;
+    text-align:center;
+}
+
+/* LINK */
+.container p{
+    text-align:center;
+    margin-top:10px;
+    color:#fff;
+}
+
+.container a{
+    color:#7f5af0;
+}
