@@ -189,7 +189,7 @@ $unreadCount = $pdo->query("SELECT COUNT(*) FROM contacts WHERE is_read = 0")->f
     </style>
 </head>
 <body>
-
+<?php include '../includes/admin_navbar.php'; ?>
 <div class="wrapper">
 
     <div class="top-bar">

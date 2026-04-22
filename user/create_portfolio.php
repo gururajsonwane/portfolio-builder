@@ -51,7 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $error = 'Please fill all required fields.';
         } elseif (!in_array($type, ['fresher', 'experienced'], true)) {
             $error = 'Invalid portfolio type.';
-        } elseif ($githubUsername !== '' && !preg_match('/^[a-zA-Z0-9-]+$/', $githubUsername)) {
+        } elseif ($githubUsername !== '' && !preg_match('/^[A-Za-z0-9-]+$/', $githubUsername)) {
             $error = 'GitHub username can contain only letters, numbers, and hyphens.';
         } else {
             try {
@@ -200,209 +200,235 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 <body>
 
-<div class="builder-wrapper">
+<?php include '../includes/user_navbar.php'; ?>
 
-    <div class="form-panel">
-        <h1>Create Portfolio</h1>
+<div class="page-shell">
+    <div class="builder-wrapper">
 
-        <?php if (!empty($error)): ?>
-            <div class="error-box"><?= htmlspecialchars($error) ?></div>
-        <?php endif; ?>
+        <div class="form-panel">
+            <h1>Create Portfolio</h1>
 
-        <form method="POST" enctype="multipart/form-data" id="portfolioForm">
-            <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION['csrf_token']) ?>">
+            <?php if (!empty($error)): ?>
+                <div class="error-box"><?= htmlspecialchars($error) ?></div>
+            <?php endif; ?>
 
-            <div class="section">
-                <h3>Basic Details</h3>
+            <form method="POST" enctype="multipart/form-data" id="portfolioForm">
+                <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION['csrf_token']) ?>">
 
-                <input class="field" type="text" name="name" id="nameInput" placeholder="Your Name / Portfolio Name" required>
-<div class="row">
-    <select class="field" name="type" id="typeInput" required>
-        <option value="">Select Type</option>
-        <option value="fresher">Fresher</option>
-        <option value="experienced">Experienced</option>
-    </select>
+                <div class="section">
+                    <h3>Basic Details</h3>
 
-    <input
-        class="field"
-        type="text"
-        name="github_username"
-        placeholder="GitHub Username (Optional)"
-        pattern="[A-Za-z0-9\-]+"
-        title="Only letters, numbers and hyphens allowed"
-    >
-</div>
+                    <input class="field" type="text" name="name" id="nameInput" placeholder="Your Name / Portfolio Name" required>
 
-<button type="button" onclick="importGithub()" class="btn">
-    Import from GitHub
-</button>
-          
+                    <div class="row">
+                        <select class="field" name="type" id="typeInput" required>
+                            <option value="">Select Type</option>
+                            <option value="fresher">Fresher</option>
+                            <option value="experienced">Experienced</option>
+                        </select>
 
-                <textarea name="bio" id="bioInput" placeholder="Write your bio..." required></textarea>
-                <div class="ai-bio-row">
-    <select id="bioStyle" class="field ai-style-select">
-        <option value="professional">Professional</option>
-        <option value="concise">Concise</option>
-        <option value="creative">Creative</option>
-    </select>
+                        <input
+                            class="field"
+                            type="text"
+                            name="github_username"
+                            placeholder="GitHub Username (Optional)"
+                            pattern="[A-Za-z0-9\-]+"
+                            title="Only letters, numbers and hyphens allowed"
+                        >
+                    </div>
 
-    <button type="button" class="btn" id="improveBioBtn" onclick="improveBioWithAI()">
-        Improve Bio with AI
-    </button>
+                    <button type="button" onclick="importGithub()" class="btn" id="importGithubBtn">
+                        Import from GitHub
+                    </button>
 
-    <span id="aiBioStatus" class="ai-status"></span>
-</div>
+                    <textarea name="bio" id="bioInput" placeholder="Write your bio..." required></textarea>
 
-                <label>Profile Image</label>
-                <input type="file" name="profile_image" id="imageInput" accept=".jpg,.jpeg,.png,.webp">
-            </div>
+                    <div class="ai-bio-row">
+                        <select id="bioStyle" class="field ai-style-select">
+                            <option value="professional">Professional</option>
+                            <option value="concise">Concise</option>
+                            <option value="creative">Creative</option>
+                        </select>
 
-            <div class="section">
-                <h3>Select Theme</h3>
-                <div class="theme-grid">
-                    <?php foreach ($themes as $theme): ?>
-                        <label class="theme-option">
-                            <input type="radio" name="theme_id" value="<?= (int)$theme['id'] ?>" required>
-                            <strong><?= htmlspecialchars($theme['theme_name']) ?></strong>
-                            <?php if (!empty($theme['preview_image'])): ?>
-                                <img src="../<?= htmlspecialchars($theme['preview_image']) ?>" alt="<?= htmlspecialchars($theme['theme_name']) ?>">
-                            <?php endif; ?>
-                        </label>
-                    <?php endforeach; ?>
+                        <button type="button" class="btn" id="improveBioBtn" onclick="improveBioWithAI()">
+                            Improve Bio with AI
+                        </button>
+
+                        <span id="aiBioStatus" class="ai-status"></span>
+                    </div>
+
+                    <label>Profile Image</label>
+                    <input type="file" name="profile_image" id="imageInput" accept=".jpg,.jpeg,.png,.webp">
                 </div>
-            </div>
 
-            <div class="section">
-                <h3>Skills</h3>
-                <div id="skillsContainer">
-                    <div class="group removable-item">
-                        <input class="field skill-input" type="text" name="skills[]" placeholder="Skill">
-                        <button type="button" class="btn btn-secondary remove-btn" onclick="removeItem(this)">Remove</button>
+                <div class="section">
+                    <h3>Select Theme</h3>
+                    <div class="theme-grid">
+                        <?php foreach ($themes as $theme): ?>
+                            <label class="theme-option">
+                                <input type="radio" name="theme_id" value="<?= (int)$theme['id'] ?>" required>
+                                <strong><?= htmlspecialchars($theme['theme_name']) ?></strong>
+                                <?php if (!empty($theme['preview_image'])): ?>
+                                    <img src="../<?= htmlspecialchars($theme['preview_image']) ?>" alt="<?= htmlspecialchars($theme['theme_name']) ?>">
+                                <?php endif; ?>
+                            </label>
+                        <?php endforeach; ?>
                     </div>
                 </div>
-                <button type="button" class="btn btn-secondary" onclick="addSkill()">+ Add Skill</button>
-            </div>
 
-            <div class="section">
-                <h3>Projects</h3>
-                <div id="projectsContainer">
-                    <div class="group removable-item project-group">
-                        <input class="field project-title" type="text" name="project_title[]" placeholder="Project Title">
-                        <textarea class="project-desc" name="project_desc[]" placeholder="Project Description"></textarea>
-                        <input class="field" type="text" name="project_link[]" placeholder="Project Link">
-                        <button type="button" class="btn btn-secondary remove-btn" onclick="removeItem(this)">Remove</button>
-                    </div>
-                </div>
-                <button type="button" class="btn btn-secondary" onclick="addProject()">+ Add Project</button>
-            </div>
 
-            <div class="section" id="educationSection">
-                <h3>Education</h3>
-                <div id="educationContainer">
-                    <div class="group removable-item edu-group">
-                        <input class="field edu-degree" type="text" name="degree[]" placeholder="Degree">
-                        <input class="field edu-college" type="text" name="college[]" placeholder="College">
-                        <input class="field edu-year" type="text" name="year[]" placeholder="Year">
-                        <input class="field" type="text" name="percentage[]" placeholder="Percentage / CGPA">
-                        <button type="button" class="btn btn-secondary remove-btn" onclick="removeItem(this)">Remove</button>
-                    </div>
-                </div>
-                <button type="button" class="btn btn-secondary" onclick="addEducation()">+ Add Education</button>
-            </div>
-
-            <div class="section hidden" id="experienceSection">
-                <h3>Experience</h3>
-                <div id="experienceContainer">
-                    <div class="group removable-item exp-group">
-                        <input class="field exp-company" type="text" name="company[]" placeholder="Company">
-                        <input class="field exp-role" type="text" name="role[]" placeholder="Role">
-                        <div class="row">
-                            <input class="field" type="date" name="start_date[]">
-                            <input class="field" type="date" name="end_date[]">
-                        </div>
-                        <textarea class="exp-desc" name="experience_desc[]" placeholder="Description"></textarea>
-                        <button type="button" class="btn btn-secondary remove-btn" onclick="removeItem(this)">Remove</button>
-                    </div>
-                </div>
-                <button type="button" class="btn btn-secondary" onclick="addExperience()">+ Add Experience</button>
-            </div>
-
-            <div class="section">
-                <h3>Social Links</h3>
-                <div id="socialContainer">
-                    <div class="group removable-item social-group">
-                        <div class="row">
-                            <input class="field" type="text" name="social_platform[]" placeholder="Platform (GitHub, LinkedIn)">
-                            <input class="field social-url" type="url" name="social_url[]" placeholder="https://..." pattern="https?://.+" title="Please enter a valid URL starting with http:// or https://">
-                        </div>
-                        <button type="button" class="btn btn-secondary remove-btn" onclick="removeItem(this)">Remove</button>
-                    </div>
-                </div>
-                <button type="button" class="btn btn-secondary" onclick="addSocial()">+ Add Social Link</button>
-            </div>
-
-            <button type="submit" class="btn" id="submitBtn">Save Portfolio</button>
-        </form>
+                
+                <div class="section">
+                    <h3>Skills</h3>
+                    <div id="skillsContainer">
+                        <div class="group removable-item">
+    <div class="item-toolbar">
+        <span class="drag-handle">☰ Drag</span>
+        <button type="button" class="btn btn-secondary remove-btn" onclick="removeItem(this)">Remove</button>
     </div>
-
-    <div class="preview-panel">
-        <h2>Live Preview</h2>
-
-        <div class="preview-card">
-            <div class="preview-header">
-                <img src="../assets/images/default.png" id="previewImage" class="preview-image" alt="Preview">
-                <h2 id="previewName">Your Name</h2>
-                <p id="previewType">Your Role Type</p>
-            </div>
-
-            <div class="preview-body">
-
-                <div class="preview-section">
-                    <h4>About Me</h4>
-                    <p id="previewBio" class="muted">Your bio will appear here...</p>
-                </div>
-
-                <div class="preview-section">
-                    <h4>Skills</h4>
-                    <div id="previewSkills" class="skill-tags">
-                        <span class="muted">No skills added yet</span>
+    <input class="field skill-input" type="text" name="skills[]" placeholder="Skill">
+</div>
+                        
                     </div>
+                    <button type="button" class="btn btn-secondary" onclick="addSkill()">+ Add Skill</button>
                 </div>
 
-                <div class="preview-section">
-                    <h4>Projects</h4>
-                    <div id="previewProjects">
-                        <p class="muted">No projects added yet</p>
+                <div class="section">
+                    <h3>Projects</h3>
+                    <div id="projectsContainer">
+                        <div class="group removable-item project-group">
+    <div class="item-toolbar">
+        <span class="drag-handle">☰ Drag</span>
+        <button type="button" class="btn btn-secondary remove-btn" onclick="removeItem(this)">Remove</button>
+    </div>
+    <input class="field project-title" type="text" name="project_title[]" placeholder="Project Title">
+    <textarea class="project-desc" name="project_desc[]" placeholder="Project Description"></textarea>
+    <input class="field" type="text" name="project_link[]" placeholder="Project Link">
+</div>
+                        
                     </div>
+                    <button type="button" class="btn btn-secondary" onclick="addProject()">+ Add Project</button>
                 </div>
 
-                <div class="preview-section" id="previewEducationSection">
-                    <h4>Education</h4>
-                    <div id="previewEducation">
-                        <p class="muted">No education details yet</p>
+                <div class="section" id="educationSection">
+                    <h3>Education</h3>
+                    <div id="educationContainer">
+                        <div class="group removable-item edu-group">
+    <div class="item-toolbar">
+        <span class="drag-handle">☰ Drag</span>
+        <button type="button" class="btn btn-secondary remove-btn" onclick="removeItem(this)">Remove</button>
+    </div>
+    <input class="field edu-degree" type="text" name="degree[]" placeholder="Degree">
+    <input class="field edu-college" type="text" name="college[]" placeholder="College">
+    <input class="field edu-year" type="text" name="year[]" placeholder="Year">
+    <input class="field" type="text" name="percentage[]" placeholder="Percentage / CGPA">
+</div>
                     </div>
+                    <button type="button" class="btn btn-secondary" onclick="addEducation()">+ Add Education</button>
                 </div>
 
-                <div class="preview-section hidden" id="previewExperienceSection">
-                    <h4>Experience</h4>
-                    <div id="previewExperience">
-                        <p class="muted">No experience details yet</p>
+                <div class="section hidden" id="experienceSection">
+                    <h3>Experience</h3>
+                    <div id="experienceContainer">
+                        <div class="group removable-item exp-group">
+    <div class="item-toolbar">
+        <span class="drag-handle">☰ Drag</span>
+        <button type="button" class="btn btn-secondary remove-btn" onclick="removeItem(this)">Remove</button>
+    </div>
+    <input class="field exp-company" type="text" name="company[]" placeholder="Company">
+    <input class="field exp-role" type="text" name="role[]" placeholder="Role">
+    <div class="row">
+        <input class="field" type="date" name="start_date[]">
+        <input class="field" type="date" name="end_date[]">
+    </div>
+    <textarea class="exp-desc" name="experience_desc[]" placeholder="Description"></textarea>
+</div>
+
                     </div>
+                    <button type="button" class="btn btn-secondary" onclick="addExperience()">+ Add Experience</button>
                 </div>
 
-                <div class="preview-section">
-                    <h4>Social Links</h4>
-                    <div id="previewSocialLinks">
-                        <p class="muted">No social links added yet</p>
+                <div class="section">
+                    <h3>Social Links</h3>
+                    <div id="socialContainer">
+                        <div class="group removable-item social-group">
+    <div class="item-toolbar">
+        <span class="drag-handle">☰ Drag</span>
+        <button type="button" class="btn btn-secondary remove-btn" onclick="removeItem(this)">Remove</button>
+    </div>
+    <div class="row">
+        <input class="field" type="text" name="social_platform[]" placeholder="Platform (GitHub, LinkedIn)">
+        <input class="field social-url" type="url" name="social_url[]" placeholder="https://..." pattern="https?://.+" title="Please enter a valid URL starting with http:// or https://">
+    </div>
+</div>
+                        
                     </div>
+                    <button type="button" class="btn btn-secondary" onclick="addSocial()">+ Add Social Link</button>
                 </div>
 
+                <button type="submit" class="btn" id="submitBtn">Save Portfolio</button>
+            </form>
+        </div>
+
+        <div class="preview-panel">
+            <h2>Live Preview</h2>
+
+            <div class="preview-card">
+                <div class="preview-header">
+                    <img src="../assets/images/default.png" id="previewImage" class="preview-image" alt="Preview">
+                    <h2 id="previewName">Your Name</h2>
+                    <p id="previewType">Your Role Type</p>
+                </div>
+
+                <div class="preview-body">
+
+                    <div class="preview-section">
+                        <h4>About Me</h4>
+                        <p id="previewBio" class="muted">Your bio will appear here...</p>
+                    </div>
+
+                    <div class="preview-section">
+                        <h4>Skills</h4>
+                        <div id="previewSkills" class="skill-tags">
+                            <span class="muted">No skills added yet</span>
+                        </div>
+                    </div>
+
+                    <div class="preview-section">
+                        <h4>Projects</h4>
+                        <div id="previewProjects">
+                            <p class="muted">No projects added yet</p>
+                        </div>
+                    </div>
+
+                    <div class="preview-section" id="previewEducationSection">
+                        <h4>Education</h4>
+                        <div id="previewEducation">
+                            <p class="muted">No education details yet</p>
+                        </div>
+                    </div>
+
+                    <div class="preview-section hidden" id="previewExperienceSection">
+                        <h4>Experience</h4>
+                        <div id="previewExperience">
+                            <p class="muted">No experience details yet</p>
+                        </div>
+                    </div>
+
+                    <div class="preview-section">
+                        <h4>Social Links</h4>
+                        <div id="previewSocialLinks">
+                            <p class="muted">No social links added yet</p>
+                        </div>
+                    </div>
+
+                </div>
             </div>
         </div>
+
     </div>
-
 </div>
-
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
 <script src="../assets/js/create_portfolio.js"></script>
 </body>
 </html>

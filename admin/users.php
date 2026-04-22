@@ -134,6 +134,7 @@ $users = $stmt->fetchAll();
 </head>
 <body>
 
+<?php include '../includes/admin_navbar.php'; ?>
 <div class="wrapper">
 
     <div class="top-bar">

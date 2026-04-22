@@ -72,17 +72,10 @@ $totalViews = $pdo->query("SELECT SUM(views) FROM portfolios")->fetchColumn();
     </style>
 </head>
 <body>
-
+<?php include '../includes/admin_navbar.php'; ?>
 <div class="wrapper">
 
-    <h1>Admin Dashboard</h1>
-<div class="nav">
-    <a href="users.php">Users</a>
-    <a href="portfolios.php">Portfolios</a>
-    <a href="themes.php">Themes</a>
-    <a href="messages.php">Messages</a>
-    <a href="../auth/logout.php">Logout</a>
-</div>
+  
     
 
     <div class="grid">

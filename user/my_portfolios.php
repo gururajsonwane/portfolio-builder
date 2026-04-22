@@ -174,7 +174,7 @@ $portfolios = $stmt->fetchAll();
     </style>
 </head>
 <body>
-
+<?php include '../includes/user_navbar.php'; ?>
 <div class="page-wrapper">
 
     <div class="top-bar">

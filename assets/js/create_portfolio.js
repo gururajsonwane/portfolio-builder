@@ -16,47 +16,59 @@ const previewExperienceSection = document.getElementById('previewExperienceSecti
 const portfolioForm = document.getElementById('portfolioForm');
 const submitBtn = document.getElementById('submitBtn');
 
-nameInput.addEventListener('input', () => {
-    previewName.textContent = nameInput.value.trim() || 'Your Name';
-});
+if (nameInput) {
+    nameInput.addEventListener('input', () => {
+        previewName.textContent = nameInput.value.trim() || 'Your Name';
+    });
+}
 
-bioInput.addEventListener('input', () => {
-    previewBio.textContent = bioInput.value.trim() || 'Your bio will appear here...';
-});
+if (bioInput) {
+    bioInput.addEventListener('input', () => {
+        previewBio.textContent = bioInput.value.trim() || 'Your bio will appear here...';
+    });
+}
 
-typeInput.addEventListener('change', () => {
-    const val = typeInput.value;
+if (typeInput) {
+    typeInput.addEventListener('change', () => {
+        const val = typeInput.value;
 
-    previewType.textContent = val ? val.charAt(0).toUpperCase() + val.slice(1) : 'Your Role Type';
+        if (previewType) {
+            previewType.textContent = val ? val.charAt(0).toUpperCase() + val.slice(1) : 'Your Role Type';
+        }
 
-    if(val === 'experienced'){
-        educationSection.classList.add('hidden');
-        experienceSection.classList.remove('hidden');
+        if (val === 'experienced') {
+            educationSection?.classList.add('hidden');
+            experienceSection?.classList.remove('hidden');
 
-        previewEducationSection.classList.add('hidden');
-        previewExperienceSection.classList.remove('hidden');
-    } else {
-        educationSection.classList.remove('hidden');
-        experienceSection.classList.add('hidden');
+            previewEducationSection?.classList.add('hidden');
+            previewExperienceSection?.classList.remove('hidden');
+        } else {
+            educationSection?.classList.remove('hidden');
+            experienceSection?.classList.add('hidden');
 
-        previewEducationSection.classList.remove('hidden');
-        previewExperienceSection.classList.add('hidden');
-    }
+            previewEducationSection?.classList.remove('hidden');
+            previewExperienceSection?.classList.add('hidden');
+        }
 
-    refreshEducationPreview();
-    refreshExperiencePreview();
-});
+        refreshEducationPreview();
+        refreshExperiencePreview();
+    });
+}
 
-imageInput.addEventListener('change', function(){
-    const file = this.files[0];
-    if(!file) return;
+if (imageInput) {
+    imageInput.addEventListener('change', function(){
+        const file = this.files[0];
+        if (!file) return;
 
-    const reader = new FileReader();
-    reader.onload = function(e){
-        previewImage.src = e.target.result;
-    };
-    reader.readAsDataURL(file);
-});
+        const reader = new FileReader();
+        reader.onload = function(e){
+            if (previewImage) {
+                previewImage.src = e.target.result;
+            }
+        };
+        reader.readAsDataURL(file);
+    });
+}
 
 function removeItem(button) {
     const item = button.closest('.removable-item');
@@ -79,11 +91,13 @@ function bindSkillPreview() {
 
 function refreshSkillsPreview() {
     const wrap = document.getElementById('previewSkills');
+    if (!wrap) return;
+
     const values = [...document.querySelectorAll('.skill-input')]
         .map(i => i.value.trim())
         .filter(v => v !== '');
 
-    if(values.length === 0){
+    if (values.length === 0) {
         wrap.innerHTML = '<span class="muted">No skills added yet</span>';
         return;
     }
@@ -93,14 +107,20 @@ function refreshSkillsPreview() {
 
 function addSkill() {
     const container = document.getElementById('skillsContainer');
+    if (!container) return;
+
     container.insertAdjacentHTML('beforeend',
         `<div class="group removable-item">
+            <div class="item-toolbar">
+                <span class="drag-handle">☰ Drag</span>
+                <button type="button" class="btn btn-secondary remove-btn" onclick="removeItem(this)">Remove</button>
+            </div>
             <input class="field skill-input" type="text" name="skills[]" placeholder="Skill">
-            <button type="button" class="btn btn-secondary remove-btn" onclick="removeItem(this)">Remove</button>
         </div>`
     );
     bindSkillPreview();
 }
+
 
 function bindProjectPreview() {
     document.querySelectorAll('.project-title, .project-desc').forEach(input => {
@@ -111,16 +131,18 @@ function bindProjectPreview() {
 
 function refreshProjectsPreview() {
     const wrap = document.getElementById('previewProjects');
+    if (!wrap) return;
+
     const titles = [...document.querySelectorAll('.project-title')];
     const descs = [...document.querySelectorAll('.project-desc')];
 
     let html = '';
 
-    for(let i = 0; i < titles.length; i++){
+    for (let i = 0; i < titles.length; i++) {
         const title = titles[i].value.trim();
         const desc = descs[i].value.trim();
 
-        if(title || desc){
+        if (title || desc) {
             html += `
                 <div class="project-item">
                     <strong>${title || 'Untitled Project'}</strong>
@@ -134,12 +156,18 @@ function refreshProjectsPreview() {
 }
 
 function addProject() {
-    document.getElementById('projectsContainer').insertAdjacentHTML('beforeend',
+    const container = document.getElementById('projectsContainer');
+    if (!container) return;
+
+    container.insertAdjacentHTML('beforeend',
         `<div class="group removable-item project-group">
+            <div class="item-toolbar">
+                <span class="drag-handle">☰ Drag</span>
+                <button type="button" class="btn btn-secondary remove-btn" onclick="removeItem(this)">Remove</button>
+            </div>
             <input class="field project-title" type="text" name="project_title[]" placeholder="Project Title">
             <textarea class="project-desc" name="project_desc[]" placeholder="Project Description"></textarea>
             <input class="field" type="text" name="project_link[]" placeholder="Project Link">
-            <button type="button" class="btn btn-secondary remove-btn" onclick="removeItem(this)">Remove</button>
         </div>`
     );
     bindProjectPreview();
@@ -154,18 +182,20 @@ function bindEducationPreview() {
 
 function refreshEducationPreview() {
     const wrap = document.getElementById('previewEducation');
+    if (!wrap) return;
+
     const degrees = [...document.querySelectorAll('.edu-degree')];
     const colleges = [...document.querySelectorAll('.edu-college')];
     const years = [...document.querySelectorAll('.edu-year')];
 
     let html = '';
 
-    for(let i = 0; i < degrees.length; i++){
+    for (let i = 0; i < degrees.length; i++) {
         const degree = degrees[i].value.trim();
         const college = colleges[i].value.trim();
         const year = years[i].value.trim();
 
-        if(degree || college || year){
+        if (degree || college || year) {
             html += `
                 <div class="edu-item">
                     <strong>${degree || 'Degree'}</strong>
@@ -180,13 +210,19 @@ function refreshEducationPreview() {
 }
 
 function addEducation() {
-    document.getElementById('educationContainer').insertAdjacentHTML('beforeend',
+    const container = document.getElementById('educationContainer');
+    if (!container) return;
+
+    container.insertAdjacentHTML('beforeend',
         `<div class="group removable-item edu-group">
+            <div class="item-toolbar">
+                <span class="drag-handle">☰ Drag</span>
+                <button type="button" class="btn btn-secondary remove-btn" onclick="removeItem(this)">Remove</button>
+            </div>
             <input class="field edu-degree" type="text" name="degree[]" placeholder="Degree">
             <input class="field edu-college" type="text" name="college[]" placeholder="College">
             <input class="field edu-year" type="text" name="year[]" placeholder="Year">
             <input class="field" type="text" name="percentage[]" placeholder="Percentage / CGPA">
-            <button type="button" class="btn btn-secondary remove-btn" onclick="removeItem(this)">Remove</button>
         </div>`
     );
     bindEducationPreview();
@@ -201,18 +237,20 @@ function bindExperiencePreview() {
 
 function refreshExperiencePreview() {
     const wrap = document.getElementById('previewExperience');
+    if (!wrap) return;
+
     const companies = [...document.querySelectorAll('.exp-company')];
     const roles = [...document.querySelectorAll('.exp-role')];
     const descs = [...document.querySelectorAll('.exp-desc')];
 
     let html = '';
 
-    for(let i = 0; i < companies.length; i++){
+    for (let i = 0; i < companies.length; i++) {
         const company = companies[i].value.trim();
         const role = roles[i].value.trim();
         const desc = descs[i].value.trim();
 
-        if(company || role || desc){
+        if (company || role || desc) {
             html += `
                 <div class="exp-item">
                     <strong>${role || 'Role'}</strong>
@@ -227,8 +265,15 @@ function refreshExperiencePreview() {
 }
 
 function addExperience() {
-    document.getElementById('experienceContainer').insertAdjacentHTML('beforeend',
+    const container = document.getElementById('experienceContainer');
+    if (!container) return;
+
+    container.insertAdjacentHTML('beforeend',
         `<div class="group removable-item exp-group">
+            <div class="item-toolbar">
+                <span class="drag-handle">☰ Drag</span>
+                <button type="button" class="btn btn-secondary remove-btn" onclick="removeItem(this)">Remove</button>
+            </div>
             <input class="field exp-company" type="text" name="company[]" placeholder="Company">
             <input class="field exp-role" type="text" name="role[]" placeholder="Role">
             <div class="row">
@@ -236,7 +281,6 @@ function addExperience() {
                 <input class="field" type="date" name="end_date[]">
             </div>
             <textarea class="exp-desc" name="experience_desc[]" placeholder="Description"></textarea>
-            <button type="button" class="btn btn-secondary remove-btn" onclick="removeItem(this)">Remove</button>
         </div>`
     );
     bindExperiencePreview();
@@ -251,6 +295,8 @@ function bindSocialPreview() {
 
 function refreshSocialPreview() {
     const wrap = document.getElementById('previewSocialLinks');
+    if (!wrap) return;
+
     const groups = [...document.querySelectorAll('.social-group')];
     let html = '';
 
@@ -272,29 +318,32 @@ function refreshSocialPreview() {
 }
 
 function addSocial() {
-    document.getElementById('socialContainer').insertAdjacentHTML('beforeend',
+    const container = document.getElementById('socialContainer');
+    if (!container) return;
+
+    container.insertAdjacentHTML('beforeend',
         `<div class="group removable-item social-group">
+            <div class="item-toolbar">
+                <span class="drag-handle">☰ Drag</span>
+                <button type="button" class="btn btn-secondary remove-btn" onclick="removeItem(this)">Remove</button>
+            </div>
             <div class="row">
                 <input class="field" type="text" name="social_platform[]" placeholder="Platform (GitHub, LinkedIn)">
                 <input class="field social-url" type="url" name="social_url[]" placeholder="https://..." pattern="https?://.+" title="Please enter a valid URL starting with http:// or https://">
             </div>
-            <button type="button" class="btn btn-secondary remove-btn" onclick="removeItem(this)">Remove</button>
         </div>`
     );
     bindSocialPreview();
 }
 
-portfolioForm.addEventListener('submit', function () {
-    submitBtn.disabled = true;
-    submitBtn.classList.add('saving');
-    submitBtn.textContent = 'Saving...';
-});
+if (portfolioForm && submitBtn) {
+    portfolioForm.addEventListener('submit', function () {
+        submitBtn.disabled = true;
+        submitBtn.classList.add('saving');
+        submitBtn.textContent = 'Saving...';
+    });
+}
 
-bindSkillPreview();
-bindProjectPreview();
-bindEducationPreview();
-bindExperiencePreview();
-bindSocialPreview();
 function escapeHtml(value) {
     return String(value)
         .replace(/&/g, '&amp;')
@@ -306,12 +355,17 @@ function escapeHtml(value) {
 
 function importGithub() {
     const usernameInput = document.querySelector('input[name="github_username"]');
-    const username = usernameInput.value.trim();
+    const username = usernameInput?.value.trim();
+    const importBtn = document.getElementById('importGithubBtn');
 
     if (!username) {
         alert("Enter GitHub username first!");
         return;
     }
+
+    const oldText = importBtn.textContent;
+    importBtn.disabled = true;
+    importBtn.textContent = 'Importing...';
 
     fetch(`/portfolio-builder/api/github.php?username=${encodeURIComponent(username)}`)
         .then(res => res.json())
@@ -350,15 +404,20 @@ function importGithub() {
         .catch(err => {
             console.error(err);
             alert("Error fetching GitHub data");
+        })
+        .finally(() => {
+            importBtn.disabled = false;
+            importBtn.textContent = oldText;
         });
 }
+
 function improveBioWithAI() {
     const bioField = document.getElementById('bioInput');
     const button = document.getElementById('improveBioBtn');
     const status = document.getElementById('aiBioStatus');
-    const style = document.getElementById('bioStyle').value;
+    const style = document.getElementById('bioStyle')?.value || 'professional';
 
-    const bio = bioField.value.trim();
+    const bio = bioField?.value.trim();
 
     if (!bio) {
         alert('Please write a bio first.');
@@ -387,7 +446,9 @@ function improveBioWithAI() {
 
         if (data.success && data.bio) {
             bioField.value = data.bio;
-            previewBio.textContent = data.bio;
+            if (previewBio) {
+                previewBio.textContent = data.bio;
+            }
             status.textContent = `Bio improved (${data.style} mode).`;
         } else {
             status.textContent = '';
@@ -405,3 +466,36 @@ function improveBioWithAI() {
         button.textContent = 'Improve Bio with AI';
     });
 }
+function initSortable(containerId, onUpdateCallback) {
+    const el = document.getElementById(containerId);
+    if (!el || typeof Sortable === 'undefined') return;
+
+    Sortable.create(el, {
+        animation: 180,
+        handle: '.drag-handle',
+        ghostClass: 'sortable-ghost',
+        chosenClass: 'sortable-chosen',
+        dragClass: 'sortable-drag',
+        onEnd: function () {
+            if (typeof onUpdateCallback === 'function') {
+                onUpdateCallback();
+            }
+        }
+    });
+}
+
+bindSkillPreview();
+bindProjectPreview();
+bindEducationPreview();
+bindExperiencePreview();
+bindSocialPreview();
+refreshSkillsPreview();
+refreshProjectsPreview();
+refreshEducationPreview();
+refreshExperiencePreview();
+refreshSocialPreview();
+initSortable('skillsContainer', refreshSkillsPreview);
+initSortable('projectsContainer', refreshProjectsPreview);
+initSortable('educationContainer', refreshEducationPreview);
+initSortable('experienceContainer', refreshExperiencePreview);
+initSortable('socialContainer', refreshSocialPreview);
